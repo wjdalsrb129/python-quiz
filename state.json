@@ -1,30 +1,36 @@
 {
-    "quizzes": [
-        {
-            "question": "파이썬에서 리스트를 만들 때 사용하는 괄호는?",
-            "choices": ["( )", "{ }", "[ ]", "< >"],
-            "answer": 3
-        },
-        {
-            "question": "파이썬에서 주석을 작성할 때 사용하는 기호는?",
-            "choices": ["//", "#", "/*", "--"],
-            "answer": 2
-        },
-        {
-            "question": "파이썬에서 출력 함수는?",
-            "choices": ["echo()", "console.log()", "print()", "printf()"],
-            "answer": 3
-        },
-        {
-            "question": "파이썬 딕셔너리를 만들 때 사용하는 괄호는?",
-            "choices": ["[ ]", "( )", "< >", "{ }"],
-            "answer": 4
-        },
-        {
-            "question": "파이썬에서 클래스를 정의하는 키워드는?",
-            "choices": ["def", "class", "func", "object"],
-            "answer": 2
-        }
-    ],
-    "best_score": 0
+  "best_score": 0,
+  "history": [],
+  "quizzes": [
+    {
+      "question": "파이썬에서 리스트를 만들 때 사용하는 괄호는?",
+      "choices": ["( )", "{ }", "[ ]", "< >"],
+      "answer": 3,
+      "hint": "대괄호라고도 불러요."
+    },
+    {
+      "question": "파이썬에서 주석을 작성할 때 사용하는 기호는?",
+      "choices": ["//", "#", "/*", "--"],
+      "answer": 2,
+      "hint": "샵(Sharp) 기호입니다."
+    },
+    {
+      "question": "파이썬에서 출력 함수는?",
+      "choices": ["echo()", "console.log()", "print()", "printf()"],
+      "answer": 3,
+      "hint": "영어로 '인쇄하다'라는 뜻이에요."
+    },
+    {
+      "question": "파이썬 딕셔너리를 만들 때 사용하는 괄호는?",
+      "choices": ["[ ]", "( )", "< >", "{ }"],
+      "answer": 4,
+      "hint": "중괄호라고도 불러요."
+    },
+    {
+      "question": "파이썬에서 들여쓰기(indentation)로 사용하는 것은?",
+      "choices": ["세미콜론(;)", "중괄호({ })", "스페이스 또는 탭", "콜론(:)"],
+      "answer": 3,
+      "hint": "키보드의 Tab 키를 생각해보세요."
+    }
+  ]
 }
