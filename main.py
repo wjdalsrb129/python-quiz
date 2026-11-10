@@ -24,46 +24,63 @@ class QuizGame:
             json.dump(self.state, f, ensure_ascii=False, indent=2)
 
     def play_quiz(self):
-        score = 0
+    score = 0
+    hint_used = 0  # ← 힌트 사용 횟수 추가
 
-        # ── 문제 수 선택 ──────────────────────────────
-        total = len(self.quiz_list)
-        print(f"\n현재 퀴즈 수: {total}개")
+    # ── 문제 수 선택 ──────────────────────────────
+    total = len(self.quiz_list)
+    print(f"\n현재 퀴즈 수: {total}개")
 
+    while True:
+        count = input(f"몇 문제를 풀까요? (1~{total}): ").strip()
+        if count.isdigit() and 1 <= int(count) <= total:
+            count = int(count)
+            break
+        print(f"⚠️  1~{total} 사이의 숫자를 입력하세요!")
+
+    # ── 랜덤 출제 ─────────────────────────────────
+    selected = random.sample(self.quiz_list, count)
+
+    print("\n===== 퀴즈 시작! =====")
+
+    for i, quiz in enumerate(selected):
+        print(f"\nQ{i+1}. {quiz.question}")
+        for j, choice in enumerate(quiz.choices):
+            print(f"  {j+1}. {choice}")
+
+        # ── 힌트 제공 ─────────────────────────────
         while True:
-            count = input(f"몇 문제를 풀까요? (1~{total}): ").strip()
-            if count.isdigit() and 1 <= int(count) <= total:
-                count = int(count)
+            answer = input("정답 번호를 입력하세요 (힌트: H): ").strip().upper()  # ← 안내 문구 수정
+
+            if answer == "H":  # ← 힌트 요청
+                if quiz.hint:
+                    print(f"💡 힌트: {quiz.hint}")
+                    hint_used += 1  # ← 힌트 사용 횟수 증가
+                else:
+                    print("💡 이 문제는 힌트가 없습니다.")
+                continue  # ← 다시 입력 받기
+
+            if answer in ["1", "2", "3", "4"]:
                 break
-            print(f"⚠️  1~{total} 사이의 숫자를 입력하세요!")
+            print("⚠️  1~4 또는 H(힌트)를 입력하세요!")
 
-        # ── 랜덤 출제 ─────────────────────────────────
-        selected = random.sample(self.quiz_list, count)  # ← 랜덤으로 count개 선택
-
-        print("\n===== 퀴즈 시작! =====")
-
-        for i, quiz in enumerate(selected):
-            print(f"\nQ{i+1}. {quiz.question}")
-            for j, choice in enumerate(quiz.choices):
-                print(f"  {j+1}. {choice}")
-
-            answer = input("정답 번호를 입력하세요: ").strip()
-
-            if answer == str(quiz.answer):
-                print("✅ 정답입니다!")
-                score += 1
-            else:
-                print(f"❌ 오답입니다! 정답은 {quiz.answer}번이에요.")
-
-        print(f"\n===== 결과 =====")
-        print(f"총 {count}문제 중 {score}개 정답!")
-
-        if score > self.state["best_score"]:
-            self.state["best_score"] = score
-            self.save()
-            print(f"🏆 최고 점수 갱신! {score}점")
+        if answer == str(quiz.answer):
+            print("✅ 정답입니다!")
+            score += 1
         else:
-            print(f"현재 최고 점수: {self.state['best_score']}점")
+            print(f"❌ 오답입니다! 정답은 {quiz.answer}번이에요.")
+
+    # ── 결과 출력 ─────────────────────────────────
+    print(f"\n===== 결과 =====")
+    print(f"총 {count}문제 중 {score}개 정답!")
+    print(f"💡 힌트 사용 횟수: {hint_used}번")  # ← 힌트 사용 횟수 출력
+
+    if score > self.state["best_score"]:
+        self.state["best_score"] = score
+        self.save()
+        print(f"🏆 최고 점수 갱신! {score}점")
+    else:
+        print(f"현재 최고 점수: {self.state['best_score']}점")
 
     def add_quiz(self):
         print("\n===== 퀴즈 추가 =====")
