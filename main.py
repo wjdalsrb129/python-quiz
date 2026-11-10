@@ -114,6 +114,45 @@ class QuizGame:
         self.quiz_list.append(Quiz(question, choices, answer))
         self.save()
         print("✅ 퀴즈가 추가되었습니다!")
+    
+    def delete_quiz(self):
+        """퀴즈 삭제"""
+        print("\n===== 퀴즈 삭제 =====")
+
+        if not self.quiz_list:
+            print("삭제할 퀴즈가 없습니다.")
+            return
+
+        # ── 목록 출력 ─────────────────────────────────
+        for i, quiz in enumerate(self.quiz_list):
+            print(f"{i+1}. {quiz.question}")
+
+        # ── 삭제할 번호 선택 ──────────────────────────
+        total = len(self.quiz_list)
+        while True:
+            choice = input(f"삭제할 퀴즈 번호를 입력하세요 (1~{total}, 취소: 0): ").strip()
+            if choice == "0":
+                print("삭제를 취소했습니다.")
+                return
+            if choice.isdigit() and 1 <= int(choice) <= total:
+                choice = int(choice)
+                break
+            print(f"⚠️  0~{total} 사이의 숫자를 입력하세요!")
+
+        # ── 삭제 확인 ─────────────────────────────────
+        target = self.quiz_list[choice - 1]
+        print(f"\n삭제할 퀴즈: {target.question}")
+        confirm = input("정말 삭제하시겠습니까? (Y/N): ").strip().upper()
+
+        if confirm != "Y":
+            print("삭제를 취소했습니다.")
+            return
+
+        # ── 삭제 실행 ─────────────────────────────────
+        self.quiz_list.pop(choice - 1)           # ← 메모리에서 삭제
+        self.state["quizzes"].pop(choice - 1)    # ← state 딕셔너리에서 삭제
+        self.save()                              # ← state.json 저장
+        print("✅ 퀴즈가 삭제되었습니다.")
 
     def list_quiz(self):
         print("\n===== 퀴즈 목록 =====")
@@ -133,8 +172,9 @@ class QuizGame:
         print("2. 최고 점수 확인")
         print("3. 퀴즈 목록 보기")
         print("4. 퀴즈 추가")
-        print("5. 히스토리 보기")  # ← 변경
-        print("6. 종료")           # ← 변경
+        print("5. 퀴즈 삭제")      # ← 추가
+        print("6. 히스토리 보기")  # ← 변경
+        print("7. 종료")           # ← 변경
         print("====================")
 
     def show_history(self):
@@ -168,12 +208,14 @@ class QuizGame:
             elif choice == "4":
                 self.add_quiz()
             elif choice == "5":
-                self.show_history()   # ← 추가
-            elif choice == "6":       # ← 변경
+                self.delete_quiz()       # ← 추가
+            elif choice == "6":
+                self.show_history()      # ← 변경
+            elif choice == "7":          # ← 변경
                 print("\n게임을 종료합니다. 안녕히 가세요!")
                 break
             else:
-                print("\n잘못된 입력입니다. 1~6 중에서 선택하세요.")  # ← 변경
+                print("\n잘못된 입력입니다. 1~7 중에서 선택하세요.")  # ← 변경
 
 if __name__ == "__main__":
     game = QuizGame()
