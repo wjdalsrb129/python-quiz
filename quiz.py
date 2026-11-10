@@ -3,15 +3,17 @@
 class Quiz:
     """개별 퀴즈를 표현하는 클래스"""
 
-    def __init__(self, question, choices, answer):
+    def __init__(self, question, choices, answer, hint=""):  # ← hint 추가
         """
         question : 질문 문자열
         choices  : 보기 4개 리스트  ex) ["Python", "Java", "C", "Ruby"]
         answer   : 정답 번호 (1~4)  ex) 1
+        hint     : 힌트 문자열 (기본값 빈 문자열)
         """
         self.question = question
         self.choices = choices
         self.answer = answer
+        self.hint = hint  # ← 추가
 
     def display(self):
         """퀴즈 문제와 보기를 출력"""
