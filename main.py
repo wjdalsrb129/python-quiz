@@ -11,6 +11,36 @@ for q in state["quizzes"]:
     quiz = Quiz(q["question"], q["choices"], q["answer"])
     quiz_list.append(quiz)
 
+# 퀴즈 풀기 함수
+def play_quiz():
+    score = 0
+    print("\n===== 퀴즈 시작! =====")
+
+    for i, quiz in enumerate(quiz_list):
+        print(f"\nQ{i+1}. {quiz.question}")
+        for j, choice in enumerate(quiz.choices):
+            print(f"  {j+1}. {choice}")
+
+        answer = input("정답 번호를 입력하세요: ").strip()
+
+        if answer == str(quiz.answer):
+            print("✅ 정답입니다!")
+            score += 1
+        else:
+            print(f"❌ 오답입니다! 정답은 {quiz.answer}번이에요.")
+
+    print(f"\n===== 결과 =====")
+    print(f"총 {len(quiz_list)}문제 중 {score}개 정답!")
+
+    # 최고 점수 갱신
+    if score > state["best_score"]:
+        state["best_score"] = score
+        with open("state.json", "w", encoding="utf-8") as f:
+            json.dump(state, f, ensure_ascii=False, indent=2)
+        print(f"🏆 최고 점수 갱신! {score}점")
+    else:
+        print(f"현재 최고 점수: {state['best_score']}점")
+
 # 메뉴 출력 함수
 def show_menu():
     print("\n===== 퀴즈 게임 =====")
@@ -25,7 +55,7 @@ while True:
     choice = input("메뉴를 선택하세요: ").strip()
 
     if choice == "1":
-        print("\n퀴즈를 시작합니다!")  # 5단계에서 구현 예정
+        play_quiz()
     elif choice == "2":
         print(f"\n최고 점수: {state['best_score']}점")
     elif choice == "3":
