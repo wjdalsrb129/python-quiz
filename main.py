@@ -1,6 +1,7 @@
 # main.py
 
 import json
+import random  # ← 추가
 from quiz import Quiz
 
 class QuizGame:
@@ -8,14 +9,14 @@ class QuizGame:
 
     def __init__(self, filepath="state.json"):
         self.filepath = filepath
-        # state.json 읽기
         with open(self.filepath, "r", encoding="utf-8") as f:
             self.state = json.load(f)
 
-        # Quiz 객체 리스트 생성
         self.quiz_list = []
         for q in self.state["quizzes"]:
-            self.quiz_list.append(Quiz(q["question"], q["choices"], q["answer"]))
+            self.quiz_list.append(
+                Quiz(q["question"], q["choices"], q["answer"], q.get("hint", ""))  # ← hint 추가
+            )
 
     def save(self):
         """state.json 저장"""
@@ -24,9 +25,24 @@ class QuizGame:
 
     def play_quiz(self):
         score = 0
+
+        # ── 문제 수 선택 ──────────────────────────────
+        total = len(self.quiz_list)
+        print(f"\n현재 퀴즈 수: {total}개")
+
+        while True:
+            count = input(f"몇 문제를 풀까요? (1~{total}): ").strip()
+            if count.isdigit() and 1 <= int(count) <= total:
+                count = int(count)
+                break
+            print(f"⚠️  1~{total} 사이의 숫자를 입력하세요!")
+
+        # ── 랜덤 출제 ─────────────────────────────────
+        selected = random.sample(self.quiz_list, count)  # ← 랜덤으로 count개 선택
+
         print("\n===== 퀴즈 시작! =====")
 
-        for i, quiz in enumerate(self.quiz_list):
+        for i, quiz in enumerate(selected):
             print(f"\nQ{i+1}. {quiz.question}")
             for j, choice in enumerate(quiz.choices):
                 print(f"  {j+1}. {choice}")
@@ -40,7 +56,7 @@ class QuizGame:
                 print(f"❌ 오답입니다! 정답은 {quiz.answer}번이에요.")
 
         print(f"\n===== 결과 =====")
-        print(f"총 {len(self.quiz_list)}문제 중 {score}개 정답!")
+        print(f"총 {count}문제 중 {score}개 정답!")
 
         if score > self.state["best_score"]:
             self.state["best_score"] = score
@@ -65,7 +81,7 @@ class QuizGame:
                 break
             print("⚠️ 1~4 중에서 입력하세요!")
 
-        new_quiz = {"question": question, "choices": choices, "answer": answer}
+        new_quiz = {"question": question, "choices": choices, "answer": answer, "hint": ""}  # ← hint 추가
         self.state["quizzes"].append(new_quiz)
         self.quiz_list.append(Quiz(question, choices, answer))
         self.save()
@@ -112,7 +128,6 @@ class QuizGame:
             else:
                 print("\n잘못된 입력입니다. 1~5 중에서 선택하세요.")
 
-# 실행
 if __name__ == "__main__":
     game = QuizGame()
     game.run()
