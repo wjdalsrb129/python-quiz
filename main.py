@@ -72,15 +72,28 @@ def add_quiz():
 
     print("✅ 퀴즈가 추가되었습니다!")
 
+def list_quiz():
+    print("\n===== 퀴즈 목록 =====")
+    if not quiz_list:
+        print("등록된 퀴즈가 없습니다.")
+        return
+    for i, quiz in enumerate(quiz_list):
+        print(f"\nQ{i+1}. {quiz.question}")
+        for j, choice in enumerate(quiz.choices):
+            print(f"  {j+1}. {choice}")
+        print(f"  정답: {quiz.answer}번")
+    print(f"\n총 {len(quiz_list)}개의 퀴즈가 있습니다.")
+
 # 메뉴 출력 함수
 def show_menu():
     print("\n===== 퀴즈 게임 =====")
     print("1. 퀴즈 시작")
     print("2. 최고 점수 확인")
-    print("3. 퀴즈 추가")
-    print("4. 종료")
+    print("3. 퀴즈 목록 보기")   # ← 새로 추가
+    print("4. 퀴즈 추가")        # ← 3에서 4로
+    print("5. 종료")             # ← 4에서 5로
     print("====================")
-
+    
 # 메인 루프
 while True:
     show_menu()
@@ -91,9 +104,11 @@ while True:
     elif choice == "2":
         print(f"\n최고 점수: {state['best_score']}점")
     elif choice == "3":
-        add_quiz()
+        list_quiz()          # ← 새로 추가
     elif choice == "4":
+        add_quiz()           # ← 3에서 4로
+    elif choice == "5":      # ← 4에서 5로
         print("\n게임을 종료합니다. 안녕히 가세요!")
         break
     else:
-        print("\n잘못된 입력입니다. 1~4 중에서 선택하세요.")
+        print("\n잘못된 입력입니다. 1~5 중에서 선택하세요.")
